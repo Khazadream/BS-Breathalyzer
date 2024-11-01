@@ -1,4 +1,4 @@
-# BS-Breathalyzer
+## **BScript Development**
 
 ## The BS-Breathalyzer script offers advanced systems for measuring alcohol consumption, intoxication and alcohol. Each of these systems is explained in detail below.
 
@@ -10,3 +10,7 @@ As your promil level increases, the intoxication effect is activated. This syste
 
 # Breathalyser System
 This system authorises players with certain professions to use a breathalyser. The breathalyser allows you to measure the blood alcohol levels of nearby players. This feature is specifically designed to increase in-game interactions. The breathalyser provides users with information about the alcohol level of the player they are targeting, enriching social dynamics and role-playing elements. It should be noted that you must have the necessary authorisations to measure with the breathalyser.
+
+
+> [CFX Release Post](https://forum.cfx.re/t/free-bs-breathalyzer-alcohol-drunk-breathalyzer-script/5279329)
+> [Video Preview](https://www.youtube.com/watch?v=1EjHqLhnpkg)
