@@ -14,3 +14,7 @@ This system authorises players with certain professions to use a breathalyser. T
 https://www.youtube.com/watch?v=1EjHqLhnpkg
 
 > [CFX Release Post](https://forum.cfx.re/t/free-bs-breathalyzer-alcohol-drunk-breathalyzer-script/5279329)
+
+# Join Discord (24/7 Support)
+> [Discord](https://discord.gg/dxVJ2wxfc6)
+
