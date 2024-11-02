@@ -17,6 +17,6 @@ Config.Framework = "QB"
 - Run the ESX.sql file.
 - If you are using esx_inventory/html/img/items folder and put the images in the `ITEMIMAGES` folder into this folder.
 - Go inside the Config.lua file and set the Config.Framework option to ESX.
-- ```lua
+```lua
 Config.Framework = "ESX"
 ```
