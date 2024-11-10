@@ -116,7 +116,7 @@ RegisterNUICallback('getClosest',function(data)
         if Config.Framework == "QB" then
             QBCore.Functions.Notify(Locale("nonearby"),"error")
         elseif Config.Framework == "ESX" then
-            ESC.ShowNotification(Locale("nonearby"))
+            ESX.ShowNotification(Locale("nonearby"))
         end
     end
 end)
