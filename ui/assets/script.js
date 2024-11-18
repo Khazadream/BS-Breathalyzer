@@ -3,24 +3,24 @@ var target = 0;
 var pipetTimer;
 var pipetInterval;
 var currentColour = 0;
-    var colours = [
-        "#435870",
-        "#DD2C00",
-        "#FF6D00",
-        "#FFD600",
-        "#64DD17",
-        "#00BFA5",
-        "#00B8D4",
-        "#0D47A1",
-        "#6200EA",
-        "#AA00FF",
-        "#C51162",
-        "#FFCDD2",
-        "#CE93D8",
-        "#B39DDB",
-        "#90CAF9",
-        "#C5E1A5"
-    ]
+var colours = [
+    "#435870",
+    "#DD2C00",
+    "#FF6D00",
+    "#FFD600",
+    "#64DD17",
+    "#00BFA5",
+    "#00B8D4",
+    "#0D47A1",
+    "#6200EA",
+    "#AA00FF",
+    "#C51162",
+    "#FFCDD2",
+    "#CE93D8",
+    "#B39DDB",
+    "#90CAF9",
+    "#C5E1A5"
+]
 $(document).ready(function () {
     $(".alcoholmeter").draggable({
         cancel: ".power-btn",
@@ -51,16 +51,16 @@ $(document).ready(function () {
                 $(".pipet").css({
                     "top": `${topPercent}%`,
                     "left": `${leftPercent}%`,
-                          "transform": "scaleX(1)"
+                    "transform": "scaleX(1)"
                 })
             }
             $(".pipet").show()
         }
     });
 
-    $(".selectplayer").hide();
-    $(".alcoholmeter").hide();
-    $(".pipet").hide();
+    // $(".selectplayer").hide();
+    // $(".alcoholmeter").hide();
+    // $(".pipet").hide();
 
     $(document).on('keydown', function (event) {
         if (event.key === 'Escape') {
@@ -79,39 +79,39 @@ $(document).ready(function () {
 
             if ($('.selectplayer').is(':visible')) {
                 $(".selectplayer").fadeOut(500);
-                $(".power-btn svg").css({"fill":"gray"});
-                
+                $(".power-btn svg").css({ "fill": "gray" });
+
                 $(".alcoholmeter").draggable("enable");
-                
+
             } else {
-                $(".power-btn svg").css({"fill":"rgb(73, 219, 29)"});
+                $(".power-btn svg").css({ "fill": "rgb(73, 219, 29)" });
                 $.post(`https://BS-Breathalyzer/getClosest`, JSON.stringify({}));
             }
 
 
         }
     })
-    function formatNmbr(number){
+    function formatNmbr(number) {
         const num = parseFloat(number)
         return num.toFixed(2);
     }
-    function changeColour(data){
+    function changeColour(data) {
         $(".panel").css({
             "background-color": data.background,
             "color": data.color
         })
     }
 
-    function addNotify(text){
+    function addNotify(text) {
         var notif = $(`<div class="notify">${text}</div>`).appendTo(".notify-cont");
         setTimeout(() => {
             notif.remove()
         }, 5000);
     }
-    
+
     $(".settings-icon").on("click", function () {
         currentColour = currentColour + 1;
-        if (currentColour >= colours.length){
+        if (currentColour >= colours.length) {
             currentColour = 0
         }
         $(".alcoholmeter").css({
@@ -129,13 +129,13 @@ $(document).ready(function () {
                 opentype = event.data.type;
                 $(".pipet").off("mousedown")
                 $(".pipet").off("mouseup")
-                $(".power-btn svg").css({"fill":"gray"});
+                $(".power-btn svg").css({ "fill": "gray" });
                 if (opentype === "police") {
                     target = 0;
                     $(".alcoholmeter").draggable("enable");
                     $(".text").html("--.--");
                 } else {
-                    $(".power-btn svg").css({"fill":"rgb(73, 219, 29)"});
+                    $(".power-btn svg").css({ "fill": "rgb(73, 219, 29)" });
                     pipetTimer = 5
                     $(".text").html("5");
                     addNotify(`Blow into the pipette for 5 seconds!`)
@@ -144,10 +144,10 @@ $(document).ready(function () {
                     $(".pipet").on("mousedown", function () {
                         pipetInterval = setInterval(() => {
                             pipetTimer = pipetTimer - 1
-                            if (pipetTimer === -1){
+                            if (pipetTimer === -1) {
                                 $.post(`https://BS-Breathalyzer/showPromil`, JSON.stringify({ target: target }));
                                 clearInterval(pipetInterval);
-                            }else{
+                            } else {
                                 $(".text").html(pipetTimer);
                             }
                         }, 1000);
@@ -168,9 +168,9 @@ $(document).ready(function () {
                 changeColour(event.data.colors)
                 $(".text").html(formatNmbr(event.data.promil));
                 addNotify(`Person has ${formatNmbr(event.data.promil)} promil alcohol`)
-                setTimeout(function(){
+                setTimeout(function () {
                     $.post(`https://BS-Breathalyzer/close`, JSON.stringify({}))
-                },5000)
+                }, 5000)
                 break;
             case "setClosestPlayers":
                 var players = event.data.players;
