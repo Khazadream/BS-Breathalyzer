@@ -3,7 +3,7 @@ game "gta5"
 
 ui_page 'ui/index.html'
 lua54 "yes"
-
+version "1.0"
 files {
   'ui/**',
   '*.json'
@@ -24,5 +24,6 @@ escrow_ingore {
 }
 
 server_scripts {
+  'versionchecker.lua',
   "server/*.lua"
 }
