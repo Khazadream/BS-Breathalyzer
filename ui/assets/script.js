@@ -69,7 +69,7 @@ $(document).ready(function () {
                 $(".alcoholmeter").draggable("enable");
 
             } else {
-                $.post(`https://BS-Breathalyzer/close`, JSON.stringify({}))
+                $.post(`https://${GetParentResourceName()}/close`, JSON.stringify({}))
             }
         }
     });
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
             } else {
                 $(".power-btn svg").css({ "fill": "rgb(73, 219, 29)" });
-                $.post(`https://BS-Breathalyzer/getClosest`, JSON.stringify({}));
+                $.post(`https://${GetParentResourceName()}/getClosest`, JSON.stringify({}));
             }
 
 
@@ -145,7 +145,7 @@ $(document).ready(function () {
                         pipetInterval = setInterval(() => {
                             pipetTimer = pipetTimer - 1
                             if (pipetTimer === -1) {
-                                $.post(`https://BS-Breathalyzer/showPromil`, JSON.stringify({ target: target }));
+                                $.post(`https://${GetParentResourceName()}/showPromil`, JSON.stringify({ target: target }));
                                 clearInterval(pipetInterval);
                             } else {
                                 $(".text").html(pipetTimer);
@@ -169,7 +169,7 @@ $(document).ready(function () {
                 $(".text").html(formatNmbr(event.data.promil));
                 addNotify(`Person has ${formatNmbr(event.data.promil)} promil alcohol`)
                 setTimeout(function () {
-                    $.post(`https://BS-Breathalyzer/close`, JSON.stringify({}))
+                    $.post(`https://${GetParentResourceName()}/close`, JSON.stringify({}))
                 }, 5000)
                 break;
             case "setClosestPlayers":
@@ -181,7 +181,7 @@ $(document).ready(function () {
                 });
                 $(".player").on("click", function () {
                     var id = $(this).attr("data-uid")
-                    $.post(`https://BS-Breathalyzer/openAlcoholmeter`, JSON.stringify({ target: id }));
+                    $.post(`https://${GetParentResourceName()}/openAlcoholmeter`, JSON.stringify({ target: id }));
                     $(".selectplayer").hide();
                 })
                 $(".selectplayer").fadeIn(500);
