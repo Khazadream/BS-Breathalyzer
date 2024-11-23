@@ -2,6 +2,9 @@ local function checkJob(src)
     if Config.Framework == "QB" then
         local PlayerJob = QBCore.Functions.GetPlayer(src).PlayerData.job.name
         return Config.WhitelistedJobs[PlayerJob]
+    elseif Config.Framework == "QBX" then
+        local PlayerJob = exports.qbx_core:GetPlayer(src).PlayerData.job.name
+        return Config.WhitelistedJobs[PlayerJob]
     elseif Config.Framework == "ESX" then
         local PlayerJob = ESX.GetPlayerFromId(src).job.name
         return Config.WhitelistedJobs[PlayerJob]
@@ -21,12 +24,21 @@ if Config.Framework == "QB" then
         if checkJob(src) then
             TriggerClientEvent('BS-Breathalyzer:client:openAlcoholMeter',src)
         else
-            if Config.Framework == "QB" then
-                QBCore.Functions.Notify(src,Locale("donthavejob"))
-            elseif Config.Framework == "ESX" then
-                local xPlayer = ESX.GetPlayerFromId(src)
-                xPlayer.showNotification(Locale("donthavejob"))
-            end
+            QBCore.Functions.Notify(src,Locale("donthavejob"))
+        end
+    end)
+elseif Config.Framework == "QBX" then
+    for itemname, _ in pairs(Config.Consumables) do
+        exports.qbx_core:CreateUseableItem(itemname, function(source, item)
+            TriggerClientEvent("BS-Breathalyzer:client:drinkAlcohol", source,itemname)
+        end)
+    end
+    exports.qbx_core:CreateUseableItem('alcoholmeter',function(source,item)
+        local src = source
+        if checkJob(src) then
+            TriggerClientEvent('BS-Breathalyzer:client:openAlcoholMeter',src)
+        else
+            exports.qbx_core:Notify(src, Locale("donthavejob"), 'error')
         end
     end)
 elseif Config.Framework == "ESX" then
@@ -40,11 +52,36 @@ elseif Config.Framework == "ESX" then
         if checkJob(src) then
             TriggerClientEvent('BS-Breathalyzer:client:openAlcoholMeter',src)
         else
-            if Config.Framework == "QB" then
-                QBCore.Functions.Notify(src,Locale("donthavejob"))
-            elseif Config.Framework == "ESX" then
-                local xPlayer = ESX.GetPlayerFromId(src)
-                xPlayer.showNotification(Locale("donthavejob"))
+            local xPlayer = ESX.GetPlayerFromId(src)
+            xPlayer.showNotification(Locale("donthavejob"))
+        end
+    end)
+end
+
+if Config.OxInventory then
+    for itemname, _ in pairs(Config.Consumables) do
+        
+    end
+    exports("usedAlcohol",function(event,item,inventory,slot,data)
+        if event == 'usingItem' then
+            local src = inventory.id
+            TriggerClientEvent("BS-Breathalyzer:client:drinkAlcohol", src,item.name)
+        end
+    end)
+    exports('openBreathalyzer',function(event, item, inventory, slot, data)
+        if event == 'usingItem' then
+            local src = inventory.id
+            if checkJob(src) then
+                TriggerClientEvent('BS-Breathalyzer:client:openAlcoholMeter',src)
+            else
+                if Config.Framework == "QB" then
+                    QBCore.Functions.Notify(src,Locale("donthavejob"))
+                elseif Config.Framework == "ESX" then
+                    local xPlayer = ESX.GetPlayerFromId(src)
+                    xPlayer.showNotification(Locale("donthavejob"))
+                elseif Config.Framework == "QBX" then
+                    exports.qbx_core:Notify(src, Locale("donthavejob"), 'error')
+                end
             end
         end
     end)
@@ -56,6 +93,14 @@ RegisterNetEvent('BS-Breathalyzer:server:getClosestPlayers',function(players)
     if Config.Framework == "QB" then
         for _, v in pairs(players) do
             local player = QBCore.Functions.GetPlayer(v)
+            local info = {}
+            info.value = tostring(v)
+            info.text = '['..v..'] '..player.PlayerData.charinfo.firstname..' '..player.PlayerData.charinfo.lastname
+            array[#array+1] = info
+        end
+    elseif Config.Framework == "QBX" then
+        for _, v in pairs(players) do
+            local player = exports.qbx_core:GetPlayer(v)
             local info = {}
             info.value = tostring(v)
             info.text = '['..v..'] '..player.PlayerData.charinfo.firstname..' '..player.PlayerData.charinfo.lastname
@@ -100,5 +145,7 @@ RegisterNetEvent('BS-Breathalyzer:server:drinkAlcohol',function(itemName)
     elseif Config.Framework == "ESX" then
         local xPlayer = ESX.GetPlayerFromId(src)
         xPlayer.removeInventoryItem(itemName,1)
+    elseif Config.Framework == "QBX" then
+        exports.ox_inventory:RemoveItem(src, itemName, 1)
     end
 end)

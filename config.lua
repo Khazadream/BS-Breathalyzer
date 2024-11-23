@@ -1,5 +1,6 @@
 Config = {}
-Config.Framework = "QB"
+Config.Framework = "QB" -- ESX - QBX - QB
+Config.OxInventory = false -- or true
 Config.Language = "en"
 Config.Locale = {
     ["en"] = {

@@ -1,7 +1,9 @@
 if Config.Framework == "QB" then
     QBCore = exports['qb-core']:GetCoreObject()
+elseif Config.Framework == "QBX" then
+    -- 
 elseif Config.Framework == "ESX" then
- -- 
+    -- 
 end
 local effect = false
 local promil = 0
@@ -62,6 +64,55 @@ RegisterNetEvent('BS-Breathalyzer:client:drinkAlcohol',function(itemName)
             end
             prop = nil
 		end)
+    elseif Config.Framework == "QBX" then
+        if lib.progressBar({
+            duration = math.random(array.time.min,array.time.max),
+            label = array.progress.text,
+            canCancel = false,
+            useWhileDead = false,
+            disable = {
+                move = true,
+                car = true,
+                mouse = false,
+                combat = true
+            },
+            prop = {
+                model = array.progress.prop.model,
+                bone = array.progress.prop.bone,
+                pos = array.progress.prop.coords,
+                rot = array.progress.prop.rotation
+            },
+            anim = {
+                dict = array.progress.animation.animDict,
+                clip = array.progress.animation.anim,
+                flag = array.progress.animation.flags
+            }
+        }) then
+            TriggerServerEvent('BS-Breathalyzer:server:drinkAlcohol', itemName)
+            local addValue = Config.Consumables[itemName] and Config.Consumables[itemName].promil or 0.10
+            promil = promil + addValue
+            if promil < 0 then
+                promil = 0
+            end
+            TriggerServerEvent('hud:server:RelieveStress', math.random(2, 4))
+            if promil > 0.50 and promil < 0.80 then
+                TriggerEvent('evidence:client:SetStatus', 'alcohol', 200)
+            elseif promil >= 0.80 then
+                TriggerEvent('evidence:client:SetStatus', 'heavyalcohol', 200)
+            end
+            if effect then
+                Config.Trips[effect].stop()
+            end
+            for _, data in pairs(Config.Trips) do
+                effect = promil >= data.promil and _ or effect
+            end
+            if effect then
+                Citizen.CreateThread(function()
+                    Config.Trips[effect].start(promil)
+                end)
+            end
+           
+        end
     elseif Config.Framework == "QB" then
         QBCore.Functions.Progressbar('drink_alcohol', array.progress.text, math.random(array.time.min,array.time.max), false, true, {
             disableMovement = false,
@@ -115,6 +166,12 @@ RegisterNUICallback('getClosest',function(data)
     else
         if Config.Framework == "QB" then
             QBCore.Functions.Notify(Locale("nonearby"),"error")
+        elseif Config.Framework == "QBX" then
+            lib.notify({
+                title = "Breathalyzer",
+                description = Locale("nonearby"),
+                type = 'error'
+            })
         elseif Config.Framework == "ESX" then
             ESX.ShowNotification(Locale("nonearby"))
         end
@@ -158,6 +215,17 @@ RegisterNetEvent('BS-Breathalyzer:client:showPromil',function(promil)
     })
 end)
 
+local function isPedDead()
+    if Config.Framework == "QBX" then
+        return exports.qbx_medical:IsLaststand() or exports.qbx_medical:IsDead()
+    elseif Config.Framework == "QB" then
+        local PlayerData = QBCore.Functions.GetPlayerData()
+        return PlayerData.metadata['inlaststand'] or PlayerData.metadata['isdead']
+    elseif Config.Framework == "ESX" then
+        return IsEntityDead(PlayerPedId())
+    end
+end
+
 Citizen.CreateThread(function()
     table.sort(Config.Trips, function (k1, k2) return k1.promil < k2.promil end )
     table.sort(Config.PromilColours, function (x1, x2) return x1.promil < x2.promil end )
@@ -178,7 +246,7 @@ Citizen.CreateThread(function()
             if Config.Trips[effect].ragdoll and math.random(1,100) >= 50 then
                 SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, false, false, false)
             end
-            if Config.Trips[effect].damage and math.random(1,100) >= 50 then
+            if (Config.Trips[effect].damage and math.random(1,100) >= 50) and not isPedDead() then
                 SetEntityHealth(PlayerPedId(),GetEntityHealth(PlayerPedId()) - 10)
             end
         else
