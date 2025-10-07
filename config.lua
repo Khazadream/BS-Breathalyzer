@@ -1,11 +1,15 @@
 Config = {}
 Config.Framework = "QB" -- ESX - QBX - QB
-Config.OxInventory = false -- or true
-Config.Language = "en"
+Config.OxInventory = true -- or true
+Config.Language = "fr"
 Config.Locale = {
     ["en"] = {
         nonearby = "there's no one nearby",
         donthavejob = "You don't know how to use this",
+    },
+    ["fr"] = {
+        nonearby = "Il n'y a personne à proximité",
+        donthavejob = "Vous ne savez pas comment utiliser ceci",
     }
 }
 
