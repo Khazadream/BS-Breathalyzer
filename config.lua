@@ -46,7 +46,23 @@ Config.PromilColours = {
 
 Config.Trips = {
     {
-        promil = 0.20,
+        promil = 0.001,
+        ragdoll = false,
+        damage = false,
+        start = function(promil)
+            print("start")
+        end,
+        stop = function()
+            print("stop")
+            SetPedIsDrunk(PlayerPedId(), false)	
+            ResetPedMovementClipset(PlayerPedId(), 0.0)	
+            SetPedMotionBlur(PlayerPedId(), false)
+            SetTimecycleModifierStrength(0.0)
+            ShakeGameplayCam("DRUNK_SHAKE", 0.0)
+        end,
+    },
+    {
+        promil = 0.51,
         ragdoll = false,
         damage = false,
         start = function(promil)
@@ -78,7 +94,8 @@ Config.Trips = {
             ShakeGameplayCam("DRUNK_SHAKE", 1.0)
         end,
         stop = function()
-            SetPedIsDrunk(PlayerPedId(), false)		
+            SetPedIsDrunk(PlayerPedId(), false)
+            ResetPedMovementClipset(PlayerPedId(), 0.0)
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)
             ShakeGameplayCam("DRUNK_SHAKE", 0.0)
@@ -101,7 +118,8 @@ Config.Trips = {
             ShakeGameplayCam("DRUNK_SHAKE", 3.0)
         end,
         stop = function()
-            SetPedIsDrunk(PlayerPedId(), false)		
+            SetPedIsDrunk(PlayerPedId(), false)
+            ResetPedMovementClipset(PlayerPedId(), 0.0)	
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)
             ShakeGameplayCam("DRUNK_SHAKE", 0.0)
@@ -124,7 +142,8 @@ Config.Trips = {
             ShakeGameplayCam("DRUNK_SHAKE", 5.0)
         end,
         stop = function()
-            SetPedIsDrunk(PlayerPedId(), false)		
+            SetPedIsDrunk(PlayerPedId(), false)	
+            ResetPedMovementClipset(PlayerPedId(), 0.0)	
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)
             ShakeGameplayCam("DRUNK_SHAKE", 0.0)
@@ -147,7 +166,8 @@ Config.Trips = {
             ShakeGameplayCam("DRUNK_SHAKE", 10.0)
         end,
         stop = function()
-            SetPedIsDrunk(PlayerPedId(), false)		
+            SetPedIsDrunk(PlayerPedId(), false)	
+            ResetPedMovementClipset(PlayerPedId(), 0.0)	
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)
             ShakeGameplayCam("DRUNK_SHAKE", 0.0)
@@ -178,7 +198,7 @@ Config.Consumables = {
         },
     },
     ["beer"] = {
-        promil = 0.30,
+        promil = 0.25,
         time = {
             min = 3000,
             max = 8000,

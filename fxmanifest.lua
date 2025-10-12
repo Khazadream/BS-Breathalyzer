@@ -11,8 +11,8 @@ files {
 
 shared_script {
   '@ox_lib/init.lua',
-  '@qbx_core/modules/lib.lua',
-  '@es_extended/imports.lua',
+  --'@qbx_core/modules/lib.lua',
+  --'@es_extended/imports.lua',
   'config.lua'
 }
 
@@ -25,6 +25,6 @@ escrow_ignore {
 }
 
 server_scripts {
-  'versionchecker.lua',
+  --'versionchecker.lua',
   "server/*.lua"
 }
