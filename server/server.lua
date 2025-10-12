@@ -68,6 +68,13 @@ if Config.OxInventory then
             TriggerClientEvent("BS-Breathalyzer:client:drinkAlcohol", src,item.name)
         end
     end)
+    exports("usedGenericAlcohol",function(event,item,inventory,slot,data)
+        if event == 'usingItem' then
+            local src = inventory.id
+            local metadata = inventory.items[slot].metadata
+            TriggerClientEvent("BS-Breathalyzer:client:drinkGenericAlcohol", src,item.name, metadata, slot)
+        end
+    end)
     exports('openBreathalyzer',function(event, item, inventory, slot, data)
         if event == 'usingItem' then
             local src = inventory.id
@@ -148,4 +155,34 @@ RegisterNetEvent('BS-Breathalyzer:server:drinkAlcohol',function(itemName)
     elseif Config.Framework == "QBX" then
         exports.ox_inventory:RemoveItem(src, itemName, 1)
     end
+end)
+
+RegisterNetEvent('BS-Breathalyzer:server:drinkGenericAlcohol',function(itemName, metadata, slot)
+    local src = source
+    if Config.Framework == "QB" then
+        local Player = QBCore.Functions.GetPlayer(src)
+        exports.ox_inventory:RemoveItem(src, itemName, 1, metadata, slot)
+    end
+end)
+
+RegisterNetEvent('bs-khaza-give-alcohol', function()
+    local src = source
+
+    local data = {
+        text = "Beer is consumed...",
+        animation = {
+            animDict = 'mp_player_intdrink',
+            anim = 'loop_bottle',
+            flags = 49
+        },
+        prop = {
+            model = 'prop_amb_beer_bottle',
+            bone = 60309,
+            coords = vec3(0.0, 0.0, -0.05),
+            rotation = vec3(0.0, 0.0, -40),
+        },
+    }
+
+
+    exports.ox_inventory:AddItem(src, 'alcohol_generic', 1, {label = 'Beer?', promil = 0.55, progress = data})
 end)

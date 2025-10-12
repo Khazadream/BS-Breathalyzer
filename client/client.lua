@@ -151,6 +151,43 @@ RegisterNetEvent('BS-Breathalyzer:client:drinkAlcohol',function(itemName)
     end
 end)
 
+RegisterNetEvent('BS-Breathalyzer:client:drinkGenericAlcohol',function(itemName, metadata, slot)
+    local itemPromil = metadata.promil or 0.10
+    local progress = metadata.progress
+    if Config.Framework == "QB" then
+        QBCore.Functions.Progressbar('drink_alcohol', progress.text, math.random(3000, 8000), false, true, {
+            disableMovement = false,
+            disableCarMovement = false,
+            disableMouse = false,
+            disableCombat = true
+        }, progress.animation, progress.prop, {}, function() -- Done
+            TriggerServerEvent('BS-Breathalyzer:server:drinkGenericAlcohol', itemName, metadata, slot)
+            promil = promil + itemPromil
+            if promil < 0 then
+                promil = 0
+            end
+            if promil > 0.50 and promil < 0.80 then
+                TriggerEvent('evidence:client:SetStatus', 'alcohol', 200)
+            elseif promil >= 0.80 then
+                TriggerEvent('evidence:client:SetStatus', 'heavyalcohol', 200)
+            end
+            if effect then
+                Config.Trips[effect].stop()
+            end
+            for _, data in pairs(Config.Trips) do
+                effect = promil >= data.promil and _ or effect
+            end
+            if effect and not underCokeInfluence then
+                Citizen.CreateThread(function()
+                    Config.Trips[effect].start(promil)
+                end)
+            end
+        end, function() -- Cancel
+    
+        end)
+    end
+end)
+
 RegisterNetEvent('BS-Breathalyzer:client:resetPromil',function()
     promil = 0
 end)
@@ -301,4 +338,8 @@ end)
 
 RegisterCommand('khaza-undercokes-off',function()
     underCokeInfluence = false
+end)
+
+RegisterCommand('khaza-give-alcohol',function()
+    TriggerServerEvent('bs-khaza-give-alcohol')
 end)
