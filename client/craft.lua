@@ -51,12 +51,32 @@ local function openCraftMenu()
                     label = "Aucun",
                 },
                 {
-                    value = 'orange',
+                    value = 'orange_juice',
                     label = "Jus d'Orange",
                 },
                 {
                     value = 'sprunk',
                     label = 'Sprunk',
+                },
+                {
+                    value = 'tomato_juice',
+                    label = 'Jus de tomate',
+                },
+                {
+                    value = 'coffee',
+                    label = 'Café',
+                },
+                {
+                    value = 'peket',
+                    label = 'Peket',
+                },
+                {
+                    value = 'cola',
+                    label = 'Cola',
+                },
+                {
+                    value = 'ananas_juice',
+                    label = "Jus d'ananas",
                 },
             },
             placeholder = 'This is a placeholder',
@@ -91,6 +111,9 @@ local function openCraftMenu()
             soft = input[3],
             quantity = input[4]
         }
+
+        TriggerServerEvent("BS-Breathalyzer:server:craft", defaults)
+
     end
 end
 
