@@ -6,8 +6,7 @@ elseif Config.Framework == "ESX" then
     -- 
 end
 local effect = false
-local promil = 0
-local underCokeInfluence = false
+promil = 0
 
 local function GetClosestPlayers()
     local players = GetActivePlayers()
@@ -140,7 +139,7 @@ RegisterNetEvent('BS-Breathalyzer:client:drinkAlcohol',function(itemName)
             for _, data in pairs(Config.Trips) do
                 effect = promil >= data.promil and _ or effect
             end
-            if effect and not underCokeInfluence then
+            if effect and not currentDrug then
                 Citizen.CreateThread(function()
                     Config.Trips[effect].start(promil)
                 end)
@@ -174,10 +173,13 @@ RegisterNetEvent('BS-Breathalyzer:client:drinkGenericAlcohol',function(itemName,
             if effect then
                 Config.Trips[effect].stop()
             end
+            if currentDrug then
+                clearDrugVisualEffects()
+            end
             for _, data in pairs(Config.Trips) do
                 effect = promil >= data.promil and _ or effect
             end
-            if effect and not underCokeInfluence then
+            if effect and not currentDrug then
                 Citizen.CreateThread(function()
                     Config.Trips[effect].start(promil)
                 end)
@@ -281,24 +283,44 @@ Citizen.CreateThread(function()
             print(promil)
             print(effect)
             local lasteffect = effect
-            for _, data in pairs(Config.Trips) do
-                effect = promil >= data.promil and _ or effect
-            end
+            
 
-            if effect and underCokeInfluence then
-                -- undercokes influence, no effect start
-            elseif not underCokeInfluence then
-                if lasteffect ~= effect then
-                    Config.Trips[lasteffect].stop()
-                    CreateThread(function()
-                        Config.Trips[effect].start(promil)
-                    end)                
+            if currentDrug then
+                for _, data in pairs(Config.Trips) do
+                    effect = promil >= data.promil and _ or effect
+                end
+                effect = effect + 1
+            else
+                for _, data in pairs(Config.Trips) do
+                    effect = promil >= data.promil and _ or effect
                 end
             end
 
+            if lasteffect ~= effect then
+                Config.Trips[lasteffect].stop()
+                CreateThread(function()
+                    Config.Trips[effect].start(promil)
+                end)                
+            end
+
+            -- if effect and currentDrug then
+            --     -- undercokes influence, no effect start
+            --     print("effect + currentdrug")
+            --     print(effect)
+            --     print(currentDrug)
+            --     print("****")
+            -- elseif not currentDrug then
+            --     if lasteffect ~= effect then
+            --         Config.Trips[lasteffect].stop()
+            --         CreateThread(function()
+            --             Config.Trips[effect].start(promil)
+            --         end)                
+            --     end
+            -- end
+
             -- if lasteffect ~= effect then
             --     Config.Trips[lasteffect].stop()
-            --     if underCokeInfluence then
+            --     if currentDrug then
             --         print("undercokes")
             --         Config.Trips[effect].stop(promil)
             --     else
@@ -308,10 +330,10 @@ Citizen.CreateThread(function()
             --         --end)                
             --     end
             -- end
-            if Config.Trips[effect].ragdoll and math.random(1,100) >= 50 and not underCokeInfluence then
+            if Config.Trips[effect].ragdoll and math.random(1,100) >= 50 and not currentDrug then
                 SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, false, false, false)
             end
-            if (Config.Trips[effect].damage and math.random(1,100) >= 50) and not isPedDead() and not underCokeInfluence then
+            if (Config.Trips[effect].damage and math.random(1,100) >= 50) and not isPedDead() and not currentDrug then
                 SetEntityHealth(PlayerPedId(),GetEntityHealth(PlayerPedId()) - 10)
             end
         else
@@ -327,17 +349,17 @@ end)
 
 RegisterNetEvent('BS-Breathalyzer:client:stopAllEffects',function()
     stopAllEffects()
-    underCokeInfluence = true
+    currentDrug = true
 end)
 
 RegisterCommand('khaza-undercokes',function()
     TriggerEvent('BS-Breathalyzer:client:stopAllEffects')
     -- effect = 1
-    -- underCokeInfluence = true
+    -- currentDrug = true
 end)
 
 RegisterCommand('khaza-undercokes-off',function()
-    underCokeInfluence = false
+    currentDrug = false
 end)
 
 RegisterCommand('khaza-give-alcohol',function()

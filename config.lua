@@ -66,12 +66,14 @@ Config.Trips = {
         ragdoll = false,
         damage = false,
         start = function(promil)
+            print("2 has started")
             SetTimecycleModifier("Bloom")
             SetTimecycleModifierStrength(1.0)
             SetPedMotionBlur(PlayerPedId(), true)
             SetPedIsDrunk(PlayerPedId(), true)
         end,
         stop = function()
+            print("2 has stopped")
             SetPedIsDrunk(PlayerPedId(), false)		
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)
@@ -251,3 +253,83 @@ function Locale(key,subs)
     end
     return tostring(translate)
 end
+
+Config.EnableDrugs = true -- Enable drug effects
+Config.Drugs = { -- Create you own drugs
+
+    ['joint'] = {
+        label = 'Joint',
+        animation = 'smoke', -- Animations: blunt, sniff, pill
+        time = 60, -- Time in seconds of the Effects
+        effects = { -- Effects: runningSpeedIncrease, infinateStamina, moreStrength, healthRegen, foodRegen, drunkWalk, psycoWalk, outOfBody, cameraShake, fogEffect, confusionEffect, whiteoutEffect, intenseEffect, focusEffect
+            'intenseEffect',
+            'healthRegen',
+            --'moreStrength',
+            'drunkWalk'
+        },
+        cooldown = 10, --360, -- Cooldown in seconds until you can use this drug again
+    },
+    ['cocaine'] = {
+        label = 'Cocaine',
+        animation = 'sniff', -- Animations: blunt, sniff, pill
+        time = 60, -- Time in seconds of the Effects
+        effects = { -- Effects: runningSpeedIncrease, infinateStamina, moreStrength, healthRegen, foodRegen, drunkWalk, psycoWalk, outOfBody, cameraShake, fogEffect, confusionEffect, whiteoutEffect, intenseEffect, focusEffect
+            --'runningSpeedIncrease',
+            'infinateStamina',
+            'fogEffect',
+            'psycoWalk'
+        },
+        cooldown = 480, -- Cooldown in seconds until you can use this drug again
+    },
+    ['meth'] = {
+        label = 'Cocaine',
+        animation = 'sniff', -- Animations: blunt, sniff, pill
+        time = 60, -- Time in seconds of the Effects
+        effects = { -- Effects: runningSpeedIncrease, infinateStamina, moreStrength, healthRegen, foodRegen, drunkWalk, psycoWalk, outOfBody, cameraShake, fogEffect, confusionEffect, whiteoutEffect, intenseEffect, focusEffect
+            'runningSpeedIncrease',
+            --'infinateStamina',
+            'confusionEffect',
+            'outOfBody',
+            'focusEffect',
+            --'drunkWalk'
+        },
+        cooldown = 480, -- Cooldown in seconds until you can use this drug again
+    },
+    ['ameth'] = {
+        label = 'Amphetamine',
+        animation = 'sniff', -- Animations: blunt, sniff, pill
+        time = 60, -- Time in seconds of the Effects
+        effects = { -- Effects: runningSpeedIncrease, infinateStamina, moreStrength, healthRegen, foodRegen, drunkWalk, psycoWalk, outOfBody, cameraShake, fogEffect, confusionEffect, whiteoutEffect, intenseEffect, focusEffect
+            'runningSpeedIncrease',
+            --'infinateStamina',
+            'whiteoutEffect',
+            --'drunkWalk'
+        },
+        cooldown = 480, -- Cooldown in seconds until you can use this drug again
+    },
+}
+
+-- Effects: 
+
+-- runningSpeedIncrease, 
+-- infinateStamina, 
+-- moreStrength, 
+-- healthRegen,
+-- foodRegen,
+
+-- drunkWalk,
+-- psycoWalk,
+
+-- outOfBody,
+-- cameraShake,
+-- fogEffect,
+-- confusionEffect,
+-- whiteoutEffect,
+-- intenseEffect,
+-- focusEffect
+
+-- TODO: Ajout de drogue dans verre d'alcool. (Citron, olives, oranges, cocaine, etc...)
+-- TODO: Dépendance alcool / drogue.
+
+-- Alcool + drogue : Effets alcool, pas d'effets visuels de drogue.       OKAY
+-- Drogue + Alcool : Effets drogue stop + Effets plus poussé de l'alcool. OKAY
