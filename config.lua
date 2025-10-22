@@ -50,10 +50,8 @@ Config.Trips = {
         ragdoll = false,
         damage = false,
         start = function(promil)
-            print("start")
         end,
         stop = function()
-            print("stop")
             SetPedIsDrunk(PlayerPedId(), false)	
             ResetPedMovementClipset(PlayerPedId(), 0.0)	
             SetPedMotionBlur(PlayerPedId(), false)
@@ -66,14 +64,12 @@ Config.Trips = {
         ragdoll = false,
         damage = false,
         start = function(promil)
-            print("2 has started")
             SetTimecycleModifier("Bloom")
             SetTimecycleModifierStrength(1.0)
             SetPedMotionBlur(PlayerPedId(), true)
             SetPedIsDrunk(PlayerPedId(), true)
         end,
         stop = function()
-            print("2 has stopped")
             SetPedIsDrunk(PlayerPedId(), false)		
             SetPedMotionBlur(PlayerPedId(), false)
             SetTimecycleModifierStrength(0.0)

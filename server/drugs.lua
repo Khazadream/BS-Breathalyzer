@@ -20,7 +20,6 @@ exports('takeDrug', function(event, item, inventory, slot, data)
             exports.ox_inventory:RemoveItem(src, item, 1, nil, slot) -- ADDED THIS ONE TO REMOVE ITEM, on ox_inventory consume = 0
         
         else
-            print("Current drug: ", currentDrug)
             --ShowNotification(src, _U('NOTIFICATION__DRUG__ALREADY'), "info")
             --TODO: Change to QBCore notify
         end
